@@ -1,6 +1,6 @@
 ; LCD.s
-; Student names: change this to your names or look very silly
-; Last modification date: change this to the last modification date or look very silly
+; Student names: definately look very silly
+; Last modification date: change this to the last modification date or look very silly (return "you think we care?")
 
 ; Runs on LM4F120/TM4C123
 ; Use SSI0 to send an 8-bit code to the ST7735 160x128 pixel LCD.
@@ -18,7 +18,6 @@
 ; RESET (pin 3) connected to PA7 (GPIO)
 ; VCC (pin 2) connected to +3.3 V
 ; Gnd (pin 1) connected to ground
-
 
 DC                      EQU   0x40004100
 DC_COMMAND              EQU   0
@@ -67,34 +66,27 @@ writecommand
 ;5) Read SSI0_SR_R and check bit 4, 
 ;6) If bit 4 is high, loop back to step 5 (wait for BUSY bit to be low)
 
-LOOPBCK
-		LDR R0, = SSI0_SR_R
-		LDRB R0, [R0]
-		BIC R1, R0, #0xEF			; CLEAR ALL BUT BIT 4
-		LSR R1, R1, #4				; SHIFT TO BIT 1
-		MOV R2, #1
-		CMP R1, R2					; IS BIT 4 HIGH??
-		BEQ LOOPBCK
-		
-		LDR R0, = DC
-		LDRB R0, [R0]
-		BIC R0, #1					; CLEAR PA6
-		STRB R0, [R2]
-		LDR R0, = SSI0_SR_R
-		LDRB R0, [R0]
-		STRB R2, [R0]
-
-LOOPAGN
-		LDR R0, = SSI0_SR_R
-		LDRB R0, [R0]
-		BIC R1, R0, #0xEF			; CLEAR ALL BUT BIT 4
-		LSR R1, R1, #4				; SHIFT TO BIT 1
-		MOV R2, #1
-		CMP R1, R2					; IS BIT 4 HIGH??
-		BEQ LOOPAGN
-		
+WC_BUSY1
+	LDR R1, =SSI0_SR_R
+	LDRB R1, [R1]
+	ANDS R1, #0x10
+	BNE WC_BUSY1
+	
+	LDR R1, =DC
+	LDR R2, =DC_COMMAND
+	STR R2, [R1]
+	
+	LDR R1, =SSI0_DR_R
+	STRB R0, [R1]
+	
+WC_BUSY2
+	LDR R1, =SSI0_SR_R
+	LDRB R1, [R1]
+	ANDS R1, #0x10
+	BNE WC_BUSY2	
     
-		BX  LR                          ;   return
+    
+    BX  LR                          ;   return
 
 ; This is a helper function that sends an 8-bit data to the LCD.
 ; Input: R0  8-bit data to transmit
@@ -106,25 +98,20 @@ writedata
 ;2) If bit 1 is low loop back to step 1 (wait for TNF bit to be high)
 ;3) Set D/C=PA6 to one
 ;4) Write the 8-bit data to SSI0_DR_R
-
-LOOPBACK
-		LDR R0, = SSI0_SR_R
-		LDRB R0, [R0]
-		BIC R1, R0, #0xFE			; CLEARS ALL BUT BIT 1
-		MOV R2, #1
-		CMP R1, R2					; IS BIT 1 LOW??
-		BNE LOOPBACK
-		
-		LDR R0, = DC				; PA6
-		LDR R0, [R0]
-		ORR R1, R0, #1				; SET PA6 HIGH
-		STR R1, [R2]
-		LDR R0, = SSI0_SR_R
-		LDRB R0, [R0]
-		STRB R2, [R0]
+WD_BUSY1
+	LDR R1, =SSI0_SR_R
+	LDRB R1, [R1]
+	ANDS R1, #0x01
+	BEQ WD_BUSY1
 	
+	LDR R1, =DC
+	LDR R2, =DC_DATA
+	STR R2, [R1]
     
-		BX  LR                          ;   return
+	LDR R1, =SSI0_DR_R
+	STRB R0, [R1]
+    
+    BX  LR                          ;   return
 
 
 ;***************************************************
