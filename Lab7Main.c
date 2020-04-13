@@ -101,7 +101,42 @@ uint32_t const TestData[SIZE] ={
   123400009,0xFFFFFFFF
 };
 
+
+
+//test extracredit image - smiling Mike Wazowski...kinda
+/*
+[WHITE] [WHITE] [GREEN] [GREEN] [GREEN] [WHITE] [WHITE]
+[WHITE] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [WHITE]
+[GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN]
+[GREEN] [GREEN] [RED] [RED] [RED] [GREEN] [GREEN]
+[GREEN] [RED] [GREEN] [GREEN] [GREEN] [RED] [GREEN]
+[GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN]
+[GREEN] [WHITE] [WHITE] [WHITE] [WHITE] [WHITE] [GREEN]
+[GREEN] [WHITE] [BLUE] [BLUE] [BLUE] [WHITE] [GREEN]
+[GREEN] [WHITE] [BLUE] [BLACK] [BLUE] [WHITE] [GREEN]
+[GREEN] [WHITE] [BLUE] [BLUE] [BLUE] [WHITE] [GREEN]
+[GREEN] [WHITE] [WHITE] [WHITE] [WHITE] [WHITE] [GREEN]
+[WHITE] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [WHITE]
+[WHITE] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [WHITE]
+*/
+const uint16_t imageMike[] = {
+0xFFFF, 0XFFFF, 0x07E0, 0x07E0, 0x07E0, 0XFFFF, 0XFFFF,
+0XFFFF, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0XFFFF,
+0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0,
+0x07E0, 0x07E0, 0XF800, 0xF800, 0XF800, 0x07E0, 0x07E0,
+0x07E0, 0XF800, 0x07E0, 0x07E0, 0x07E0, 0xF800, 0x07E0,
+0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0,
+0x07E0, 0XFFFF, 0XFFFF, 0XFFFF, 0XFFFF, 0xFFFF, 0x07E0,
+0x07E0, 0XFFFF, 0X001F, 0X001F, 0X001F, 0XFFFF, 0x07E0,
+0x07E0, 0XFFFF, 0X001F, 0X0000, 0X001F, 0XFFFF, 0x07E0,
+0x07E0, 0XFFFF, 0X001F, 0X001F, 0X001F, 0XFFFF, 0x07E0,	
+0x07E0, 0XFFFF, 0XFFFF, 0XFFFF, 0XFFFF, 0XFFFF, 0x07E0,
+0XFFFF, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0XFFFF,
+0xFFFF, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0xFFFF,
+};
   
+
+
 
 int main(void){  
   uint32_t i;
@@ -110,11 +145,12 @@ int main(void){
   
   // test DrawChar() and DrawCharS()
   ST7735_InitR(INITR_REDTAB);
-  ST7735_OutString("Lab 7 Fall 2019\nWelcome to EE319K");
+ // ST7735_OutString("Lab 7 Fall 2019\nWelcome to EE319K");
   IO_Touch();
 
   ST7735_FillScreen(0xFFFF);   // set screen to white
-  ST7735_DrawBitmap(44, 159, Logo, 40, 160);
+ // ST7735_DrawBitmap(44, 159, Logo, 40, 160);
+	ST7735_DrawBitmap(64,80,imageMike,7,13);
   IO_Touch();
   ST7735_FillScreen(0);       // set screen to black
   for(i=0;i<SIZE;i++){
@@ -123,7 +159,7 @@ int main(void){
     LCD_OutDec(TestData[i]);
     ST7735_SetCursor(11,i);
     LCD_OutFix(TestData[i]);
-//    IO_Touch(); // remove this line to see all test cases
+   // IO_Touch(); // remove this line to see all test cases
   }
   while(1){
   }
