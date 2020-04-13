@@ -123,7 +123,7 @@ int main(void){
     LCD_OutDec(TestData[i]);
     ST7735_SetCursor(11,i);
     LCD_OutFix(TestData[i]);
-    IO_Touch(); // remove this line to see all test cases
+//    IO_Touch(); // remove this line to see all test cases
   }
   while(1){
   }
