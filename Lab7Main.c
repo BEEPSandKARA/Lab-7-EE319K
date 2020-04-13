@@ -86,6 +86,7 @@
 // VCC    (pin 2)  connected to +3.3 V
 // GND    (pin 1)  connected to ground
 
+
 #include <stdio.h>
 #include <stdint.h>
 #include "ST7735.h"
@@ -96,29 +97,74 @@
 #include "images.h"
 
 #define SIZE 16
+
+//*****COLORS******
+/* some RGB color definitions                                                 */
+#define Black           0x0000      /*   0,   0,   0 */
+#define Navy            0x000F      /*   0,   0, 128 */
+#define DarkGreen       0x03E0      /*   0, 128,   0 */
+#define DarkCyan        0x03EF      /*   0, 128, 128 */
+#define Maroon          0x7800      /* 128,   0,   0 */
+#define Purple          0x780F      /* 128,   0, 128 */
+#define Olive           0x7BE0      /* 128, 128,   0 */
+#define LightGrey       0xC618      /* 192, 192, 192 */
+#define DarkGrey        0x7BEF      /* 128, 128, 128 */
+#define Blue            0x001F      /*   0,   0, 255 */
+#define Green           0x07E0      /*   0, 255,   0 */
+#define Cyan            0x07FF      /*   0, 255, 255 */
+#define Red             0xF800      /* 255,   0,   0 */
+#define Magenta         0xF81F      /* 255,   0, 255 */
+#define Yellow          0xFFE0      /* 255, 255,   0 */
+#define White           0xFFFF      /* 255, 255, 255 */
+#define Orange          0xFD20      /* 255, 165,   0 */
+#define GreenYellow     0xAFE5      /* 173, 255,  47 */
+#define Pink            0xF81F
+//***********************************************************************
+
+
+
 uint32_t const TestData[SIZE] ={
   0,7,9,10,99,100,409,654,999,1000,9999,10000,20806,65535,
   123400009,0xFFFFFFFF
 };
+	
 
 
 
-//test extracredit image - smiling Mike Wazowski...kinda
-/*
-[WHITE] [WHITE] [GREEN] [GREEN] [GREEN] [WHITE] [WHITE]
-[WHITE] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [WHITE]
-[GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN]
-[GREEN] [GREEN] [RED] [RED] [RED] [GREEN] [GREEN]
-[GREEN] [RED] [GREEN] [GREEN] [GREEN] [RED] [GREEN]
-[GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN]
-[GREEN] [WHITE] [WHITE] [WHITE] [WHITE] [WHITE] [GREEN]
-[GREEN] [WHITE] [BLUE] [BLUE] [BLUE] [WHITE] [GREEN]
-[GREEN] [WHITE] [BLUE] [BLACK] [BLUE] [WHITE] [GREEN]
-[GREEN] [WHITE] [BLUE] [BLUE] [BLUE] [WHITE] [GREEN]
-[GREEN] [WHITE] [WHITE] [WHITE] [WHITE] [WHITE] [GREEN]
-[WHITE] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [WHITE]
-[WHITE] [GREEN] [GREEN] [GREEN] [GREEN] [GREEN] [WHITE]
-*/
+//*****************************************************************************
+//*****Testting*************
+
+// test image2
+// [red]   [yellow]  [green]   [blue]	[black]
+// [red]   [yellow]  [green]   [blue]	[white]
+// [red]   [yellow]  [green]   [blue]	[black]
+// [red]   [yellow]  [green]   [blue]	[white]
+// [red]   [yellow]  [green]   [blue]	[black]
+// [black] [75%grey] [50%grey] [25%grey] [white]
+const uint16_t Extra_Credit[] = {
+	
+	Black,	Black,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Black,	Black,
+	Black,	Black,	Black,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Black,	Black,	Black,
+	Black,	Black,	Black,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Black,	Black,	Black,	Black,
+	Black,	Black,	Black,	Black,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Black,	Black,	Black,	Black,
+	Black,	Black,	Black,	Black,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Yellow,	Black,	Black,	Black,	Black,
+	Black,	Black,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Black,	Black,
+	Black,	Black,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Black,	Black,
+	Black,	Black,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Black,	Black,
+	Green,	Green,	Blue,		Blue,		Blue,		White,	White,	White,	White,	Blue,		Blue,		Blue,		Green,	Green,
+	Green,	Green,	Blue,		Blue,		Blue,		White,	White,	White,	White,	Blue,		Blue,		Blue,		Green,	Green,
+	Green,	Green,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Blue,		White,	White,	White,	White,	Blue,		Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Blue,		Black,	Black,	Black,	Black,	Blue,		Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Blue,		Black,	Black,	Black,	Blue,		Black,	Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Black,	Blue,		Black,	Black,	Blue,		Black,	Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Black,	Blue,		Black,	Blue,		Black,	Black,	Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Black,	Blue,		Black,	Blue,		Black,	Black,	Black,	Black,	Green,	Green,
+	Green,	Green,	Black,	Black,	Black,	Black,	Blue,		Black,	Black,	Black,	Black,	Black,	Green,	Green
+};
+
 const uint16_t imageMike[] = {
 0xFFFF, 0XFFFF, 0x07E0, 0x07E0, 0x07E0, 0XFFFF, 0XFFFF,
 0XFFFF, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0XFFFF,
@@ -134,9 +180,9 @@ const uint16_t imageMike[] = {
 0XFFFF, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0XFFFF,
 0xFFFF, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0xFFFF,
 };
-  
 
-
+//***********************************************
+//*****************************************************************************
 
 int main(void){  
   uint32_t i;
@@ -145,12 +191,15 @@ int main(void){
   
   // test DrawChar() and DrawCharS()
   ST7735_InitR(INITR_REDTAB);
- // ST7735_OutString("Lab 7 Fall 2019\nWelcome to EE319K");
+  ST7735_OutString("Lab 7 Fall 2019\nWelcome to EE319K");
   IO_Touch();
+	
+	ST7735_OutString("\nEXTRA CREDIT");
+	ST7735_DrawBitmap(64,80,Extra_Credit,14,20);
+	IO_Touch();
 
   ST7735_FillScreen(0xFFFF);   // set screen to white
- // ST7735_DrawBitmap(44, 159, Logo, 40, 160);
-	ST7735_DrawBitmap(64,80,imageMike,7,13);
+  ST7735_DrawBitmap(44, 159, Logo, 40, 160);
   IO_Touch();
   ST7735_FillScreen(0);       // set screen to black
   for(i=0;i<SIZE;i++){
@@ -159,7 +208,7 @@ int main(void){
     LCD_OutDec(TestData[i]);
     ST7735_SetCursor(11,i);
     LCD_OutFix(TestData[i]);
-   // IO_Touch(); // remove this line to see all test cases
+//    IO_Touch(); // remove this line to see all test cases
   }
   while(1){
   }
